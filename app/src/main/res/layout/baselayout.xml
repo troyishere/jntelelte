@@ -1,0 +1,367 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="#1F2830"
+
+    >
+    <TextView
+        android:id="@+id/phonetitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#E07A28"
+        android:text="手机基础信息"
+        android:textColor="#fff"
+        android:gravity="center_horizontal"/>
+
+    <GridLayout
+        android:id="@+id/phoneinfogrid"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:columnCount="2">
+        <TextView
+            android:id="@+id/changjia"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight = "1"
+            android:background="#1F2830"
+            android:textColor="#FFF"
+            android:text="厂家：" />
+        <TextView
+            android:id="@+id/system"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight = "1"
+            android:background="#1F2830"
+            android:textColor="#FFF"
+            android:text="系统：" />
+        <TextView
+            android:id="@+id/xinghao"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight = "1"
+            android:background="#101010"
+            android:textColor="#FFF"
+            android:text="型号：" />
+        <TextView
+            android:id="@+id/network"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight = "1"
+            android:background="#101010"
+            android:textColor="#FFF"
+            android:text="数据：" />
+
+        <TextView
+            android:id="@+id/locationtype"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight = "1"
+            android:background="#1F2830"
+            android:textColor="#FFF"
+            android:text="定位：" />
+
+        <TextView
+            android:id="@+id/location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight = "1"
+            android:background="#1F2830"
+            android:textColor="#FFF"
+            android:text="()" />
+
+
+        <TextView
+            android:id="@+id/imei1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight = "1"
+            android:background="#101010"
+            android:textColor="#FFF"
+            android:text=" IMEI：" />
+        <TextView
+            android:id="@+id/iesi1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight = "1"
+            android:background="#101010"
+            android:textColor="#FFF"
+            android:text=" IESI：" />
+        <!--<TextView-->
+        <!--android:id="@+id/imei2"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_columnWeight = "1"-->
+        <!--android:background="#1C2028"-->
+        <!--android:textColor="#FFF"-->
+        <!--android:text=" IMEI2：" />-->
+        <!--<TextView-->
+        <!--android:id="@+id/iesi2"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_columnWeight = "1"-->
+        <!--android:background="#1C2028"-->
+        <!--android:textColor="#FFF"-->
+        <!--android:text=" ISEI2：" />-->
+    </GridLayout>
+    <TextView
+        android:id="@+id/ltetitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#448B00"
+        android:text="LTE网络信息"
+        android:textColor="#fff"
+        android:gravity="center_horizontal"/>
+    <GridLayout
+        android:id="@+id/lteinfogrid"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:columnCount="4">
+        <TextView
+            android:id="@+id/enodeb"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight = "1"
+            android:background="#1F2830"
+            android:textColor="#FFF"
+            android:text="eNB" />
+        <TextView
+            android:id="@+id/cellid"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight = "1"
+            android:background="#1F2830"
+            android:textColor="#FFF"
+            android:text="CellId" />
+        <TextView
+            android:id="@+id/pci"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight = "1"
+            android:background="#1F2830"
+            android:textColor="#FFF"
+            android:text="PCI" />
+        <TextView
+            android:id="@+id/tac"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight = "1"
+            android:background="#1F2830"
+            android:textColor="#FFF"
+            android:text="TAC" />
+
+        <TextView
+            android:id="@+id/ci"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight = "1"
+            android:background="#101010"
+            android:textColor="#FFF"
+            android:text="CI" />
+
+        <TextView
+            android:id="@+id/pindian"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight = "1"
+            android:background="#101010"
+            android:textColor="#FFF"
+            android:text= "频点" />
+
+
+        <TextView
+            android:id="@+id/freq"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight = "1"
+            android:background="#101010"
+            android:textColor="#FFF"
+            android:text="频段" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight = "1"
+            android:background="#101010"
+            android:textColor="#FFF"
+            android:text="" />
+        <TextView
+            android:id="@+id/rsrp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight = "1"
+            android:background="#1F2830"
+            android:textColor="#FFF"
+            android:text="RSRP" />
+
+        <TextView
+            android:id="@+id/rsrq"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight = "1"
+            android:background="#1F2830"
+            android:textColor="#FFF"
+            android:text="RSRQ" />
+
+        <TextView
+            android:id="@+id/sinr"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight = "1"
+            android:background="#1F2830"
+            android:textColor="#FFF"
+            android:text="SINR" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight = "1"
+            android:background="#1F2830"
+            android:textColor="#FFF"
+            android:text="" />
+    </GridLayout>
+    <TextView
+        android:id="@+id/celltitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#9470DA"
+        android:text="LTE基站信息"
+        android:textColor="#fff"
+        android:gravity="center_horizontal"/>
+    <TextView
+        android:id="@+id/bbuname"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#1F2830"
+        android:text="BBU名："
+        android:textColor="#FFF"/>
+    <TextView
+        android:id="@+id/cellname"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#101010"
+        android:text="小区名："
+        android:textColor="#FFF"/>
+    <GridLayout
+        android:id="@+id/cellinfogrid"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:columnCount="2">
+        <TextView
+            android:id="@+id/stationname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight = "1"
+            android:background="#1F2830"
+            android:textColor="#FFF"
+            android:text="设计名：" />
+        <TextView
+            android:id="@+id/xitong"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight = "1"
+            android:background="#1F2830"
+            android:textColor="#FFF"
+            android:text="系统：" />
+        <TextView
+            android:id="@+id/rrutype"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight = "1"
+            android:background="#101010"
+            android:textColor="#FFF"
+            android:text="RRU型号：" />
+        <TextView
+            android:id="@+id/producer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight = "1"
+            android:background="#101010"
+            android:textColor="#FFF"
+            android:text="厂家：" />
+
+
+    </GridLayout>
+    <TextView
+        android:id="@+id/cdmatitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#80388A"
+        android:text="CDMA网络信息"
+        android:textColor="#fff"
+        android:gravity="center_horizontal"/>
+    <GridLayout
+        android:id="@+id/cdmainfogrid"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:columnCount="4">
+        <TextView
+            android:id="@+id/sid"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight = "1"
+            android:background="#1F2830"
+            android:textColor="#FFF"
+            android:text="SID" />
+        <TextView
+            android:id="@+id/nid"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight = "1"
+            android:background="#1F2830"
+            android:textColor="#FFF"
+            android:text="NID" />
+        <TextView
+            android:id="@+id/cid"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight = "1"
+            android:background="#1F2830"
+            android:textColor="#FFF"
+            android:text="CID" />
+        <TextView
+            android:id="@+id/evdosnr"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight = "1"
+            android:background="#1F2830"
+            android:textColor="#FFF"
+            android:text="Snr" />
+
+        <TextView
+            android:id="@+id/cdmadbm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight = "1"
+            android:background="#101010"
+            android:textColor="#FFF"
+            android:text="2GRx" />
+
+        <TextView
+            android:id="@+id/cdmaecio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight = "1"
+            android:background="#101010"
+            android:textColor="#FFF"
+            android:text= "2GEcio" />
+
+        <TextView
+            android:id="@+id/evdodbm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight = "1"
+            android:background="#101010"
+            android:textColor="#FFF"
+            android:text="3GRx" />
+        <TextView
+            android:id="@+id/evdoecio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight = "1"
+            android:background="#101010"
+            android:textColor="#FFF"
+            android:text="3GEcio" />
+    </GridLayout>
+
+</LinearLayout>
