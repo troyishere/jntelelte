@@ -10,6 +10,7 @@ import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -25,22 +26,6 @@ public class PermissionUtil {
      */
     private static boolean needCheckPermission() {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M;
-    }
-    // 获取文件权限
-    public static boolean getFilePermissions(@NonNull Activity activity, int requestCode) {
-        return requestPerssions(activity, requestCode, Manifest.permission.MOUNT_UNMOUNT_FILESYSTEMS, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-    }
-    // 获取定位权限
-    public static boolean getLocationPermissions(@NonNull Activity activity, int requestCode) {
-        return requestPerssions(activity, requestCode, Manifest.permission.ACCESS_COARSE_LOCATION,Manifest.permission.ACCESS_FINE_LOCATION);
-    }
-    // 手机状态权限
-    public static boolean getPhoneStatePermissions(@NonNull Activity activity, int requestCode) {
-        return requestPerssions(activity, requestCode, Manifest.permission.READ_PHONE_STATE);
-    }
-    // 网络状态信息
-    public static boolean getNetStatePermissions(@NonNull Activity activity, int requestCode) {
-        return requestPerssions(activity, requestCode, Manifest.permission.ACCESS_NETWORK_STATE);
     }
 
     public static List<String> getDeniedPermissions(@NonNull Activity activity, @NonNull String... permissions) {
@@ -104,14 +89,12 @@ public class PermissionUtil {
      * 在 onActivityResult() 中还需要对权限进行判断，因为用户有可能没有授权就返回了！<br/>
      */
     public static void startApplicationDetailsSettings(@NonNull Activity activity, int requestCode) {
-        Toast.makeText(activity, "点击权限，并打开全部权限", Toast.LENGTH_SHORT).show();
+        Toast.makeText(activity, "请点击打开相关权限", Toast.LENGTH_SHORT).show();
 
         Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
         Uri uri = Uri.fromParts("package", activity.getPackageName(), null);
         intent.setData(uri);
         activity.startActivityForResult(intent, requestCode);
-
-
     }
 
     /**
@@ -120,12 +103,11 @@ public class PermissionUtil {
      *
      * @return 是否已经获取权限
      */
-    public static boolean requestPerssions(Activity activity, int requestCode, String... permissions) {
+    public static boolean requestPermissions(Activity activity, int requestCode, String... permissions) {
 
         if (!needCheckPermission()) {
             return true;
         }
-
         if (!hasPermissons(activity, permissions)) {
             if (deniedRequestPermissonsAgain(activity, permissions)) {
                 startApplicationDetailsSettings(activity, requestCode);
@@ -146,47 +128,19 @@ public class PermissionUtil {
      * 申请权限返回方法
      */
     public static void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                                  @NonNull int[] grantResults, @NonNull OnRequestPermissionsResultCallbacks callBack) {
-        // Make a collection of granted and denied permissions from the request.
-        List<String> granted = new ArrayList<>();
+                                                  @NonNull int[] grantResults,Activity activity) {
         List<String> denied = new ArrayList<>();
         for (int i = 0; i < permissions.length; i++) {
             String perm = permissions[i];
-            if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
-                granted.add(perm);
-            } else {
+            if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
                 denied.add(perm);
+//                Log.d("TroyInfo",perm);
             }
+
         }
-
-        if (null != callBack) {
-            if (!granted.isEmpty()) {
-                callBack.onPermissionsGranted(requestCode, granted, denied.isEmpty());
-            }
-            if (!denied.isEmpty()) {
-                callBack.onPermissionsDenied(requestCode, denied, granted.isEmpty());
-            }
+//        Log.d("TroyInfo","Len" + denied.size());
+        if (denied.size() != 0) {
+            startApplicationDetailsSettings(activity, requestCode);
         }
-
-
-    }
-
-
-    /**
-     * 申请权限返回
-     */
-//    public interface OnRequestPermissionsResultCallbacks extends ActivityCompat.OnRequestPermissionsResultCallback {
-    public interface OnRequestPermissionsResultCallbacks {
-
-        /**
-         * @param isAllGranted 是否全部同意
-         */
-        void onPermissionsGranted(int requestCode, List<String> perms, boolean isAllGranted);
-
-        /**
-         * @param isAllDenied 是否全部拒绝
-         */
-        void onPermissionsDenied(int requestCode, List<String> perms, boolean isAllDenied);
-
     }
 }

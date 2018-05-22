@@ -1,8 +1,12 @@
 package com.jntele.troy.jntelelte;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
@@ -14,6 +18,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.telephony.CellIdentityCdma;
@@ -28,12 +33,14 @@ import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
+import android.view.Gravity;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements PermissionUtil.OnRequestPermissionsResultCallbacks{
+public class MainActivity extends AppCompatActivity{ //implements ActivityCompat.OnRequestPermissionsResultCallback{
 
     // 手机基础信息界面元素
     private TextView changjiaView;
@@ -85,10 +92,11 @@ public class MainActivity extends AppCompatActivity implements PermissionUtil.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        // 基站数据库处理
-        initDataBase();
+
         // 手机权限处理
         initPermission();
+        // 基站数据库处理
+        initDataBase();
         // 手机界面相关
         initUI();
         // 手机信号状态
@@ -105,31 +113,15 @@ public class MainActivity extends AppCompatActivity implements PermissionUtil.On
 
     // 判断手机权限
     private void initPermission() {
-//        PermissionUtil.getPhoneStatePermissions(this,REQUEST_CODE_PHONESTATE);
-//        PermissionUtil.getFilePermissions(this,REQUEST_CODE_PHONESTATE);
-        PermissionUtil.requestPerssions(this, REQUEST_CODE,
+        PermissionUtil.requestPermissions(this, REQUEST_CODE,
                 Manifest.permission.ACCESS_COARSE_LOCATION,
                 Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.ACCESS_NETWORK_STATE,
                 Manifest.permission.READ_PHONE_STATE,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                Manifest.permission.MOUNT_UNMOUNT_FILESYSTEMS);
-        PermissionUtil.getPhoneStatePermissions(this, REQUEST_CODE);
-        PermissionUtil.getFilePermissions(this, REQUEST_CODE);
-        PermissionUtil.getLocationPermissions(this, REQUEST_CODE);
-        PermissionUtil.getNetStatePermissions(this, REQUEST_CODE);
-    }
+                //Manifest.permission.MOUNT_UNMOUNT_FILESYSTEMS,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
+    }
     @Override
-    public void onPermissionsGranted(int requestCode, List<String> perms, boolean isAllGranted) {
-
-    }
-
-    @Override
-    public void onPermissionsDenied(int requestCode, List<String> perms, boolean isAllDenied) {
-
-    }
-
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         PermissionUtil.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
@@ -216,7 +208,7 @@ public class MainActivity extends AppCompatActivity implements PermissionUtil.On
     private void showPhoneInfo() {
         setInfo(networkView, "网络：", String.format("%s(%s)", getNetWorkType(), teleManager.getNetworkOperatorName()));
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-            Log.d("TroyInfo", "Need READ_PHONE_STATE Permission");
+//            Log.d("TroyInfo", "Need READ_PHONE_STATE Permission");
             return;
         }
         setInfo(imei1View, "IMEI：", teleManager.getDeviceId());
@@ -253,7 +245,9 @@ public class MainActivity extends AppCompatActivity implements PermissionUtil.On
         conManger = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
         teleManager = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
         TeleListener teleListener = new TeleListener();
-        teleManager.listen(teleListener, PhoneStateListener.LISTEN_SIGNAL_STRENGTHS | PhoneStateListener.LISTEN_CELL_INFO);
+        if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            teleManager.listen(teleListener, PhoneStateListener.LISTEN_SIGNAL_STRENGTHS | PhoneStateListener.LISTEN_CELL_INFO);
+        }
     }
     // 手机信号变化监听
     private class TeleListener extends PhoneStateListener {
@@ -261,11 +255,7 @@ public class MainActivity extends AppCompatActivity implements PermissionUtil.On
         // 小区信息变化时
         public void onCellInfoChanged(List<CellInfo> cellList) {
             super.onCellInfoChanged(cellList);
-            if (ActivityCompat.checkSelfPermission(getBaseContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                Log.d("TroyInfo","Need ACCESS_COARSE_LOCATION Permission");
-                return;
-            }
-            List<CellInfo> allCellInfo = teleManager.getAllCellInfo();
+            @SuppressLint("MissingPermission") List<CellInfo> allCellInfo = teleManager.getAllCellInfo();
             CellInfoLte cellInfoLte;
             CellInfoCdma cellInfoCdma;
             int tmp = 0;
@@ -294,9 +284,14 @@ public class MainActivity extends AppCompatActivity implements PermissionUtil.On
                         cellInfoCdma = (CellInfoCdma)cellInfo;
                         if(cellInfoCdma.isRegistered()) {
                             CellIdentityCdma cellIdentity = cellInfoCdma.getCellIdentity();
+
                             setInfo(nidView,"NID ",""+cellIdentity.getNetworkId());
                             setInfo(sidView,"SID ",""+cellIdentity.getSystemId());
-                            setInfo(cidView,"CID",""+cellIdentity.getBasestationId());
+                            int cid = cellIdentity.getBasestationId();
+                            int x = cid/(16*16);
+                            int y = x/16;
+                            int z = cid-x*16*16+y*16*16;
+                            setInfo(cidView,"BID ",""+z);
                             break;
                         }
                     }
@@ -342,7 +337,7 @@ public class MainActivity extends AppCompatActivity implements PermissionUtil.On
                 if ((tmp <= -120) || (tmp >= -1))
                     tmpInfo = "";
                 else
-                    tmpInfo = "" + tmp;
+                    tmpInfo = "" + 0.1*tmp;
                 setInfo(cdmaEcioView, "1XEcio", tmpInfo);
                 tmp = (int) signalStrength.getClass().getMethod("getEvdoDbm").invoke(signalStrength);
                 if ((tmp <= -120) || (tmp >= -1))
@@ -355,7 +350,7 @@ public class MainActivity extends AppCompatActivity implements PermissionUtil.On
                 if ((tmp <= -120) || (tmp >= -1))
                     tmpInfo = "";
                 else
-                    tmpInfo = "" + tmp;
+                    tmpInfo = "" + 0.1*tmp;
                 setInfo(evdoEcioView, "DoEcio", tmpInfo);
                 tmp = (int) signalStrength.getClass().getMethod("getEvdoSnr").invoke(signalStrength);
                 if ((tmp == -1) || (tmp == 255))
@@ -369,7 +364,6 @@ public class MainActivity extends AppCompatActivity implements PermissionUtil.On
                 return;
             }
         }
-
     }
 
     // 更新/获取基站信息
@@ -385,8 +379,9 @@ public class MainActivity extends AppCompatActivity implements PermissionUtil.On
     }
 
     /***********************************************************************/
+    @SuppressLint("MissingPermission")
     private void initLocation() {
-        Log.d("TroyInfo", "initLocation");
+//        Log.d("TroyInfo", "initLocation");
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         List<String> list = locationManager.getProviders(true);
         if (list.contains(LocationManager.GPS_PROVIDER)) {
@@ -397,14 +392,16 @@ public class MainActivity extends AppCompatActivity implements PermissionUtil.On
             //是否为网络位置控制器
             locationProvider = LocationManager.NETWORK_PROVIDER;
         }
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            Log.d("TroyInfo","Need ACCESS_FINE_LOCATION and ACCESS_COARSE_LOCATION Permission");
-            return;
-        }
-        locationManager.requestLocationUpdates(locationProvider, 3000, 1, locationListener);
-        Location location = locationManager.getLastKnownLocation(locationProvider);
-        if (location != null) {
-            showLocation(location);
+
+        if(locationProvider==""){
+            Log.d("TroyInfo","Provider Null");
+            Toast.makeText(getApplicationContext(), "请至少打开网络定位！",   Toast.LENGTH_SHORT).show();
+        }else {
+            locationManager.requestLocationUpdates(locationProvider, 3000, 1, locationListener);
+            Location location = locationManager.getLastKnownLocation(locationProvider);
+            if (location != null) {
+                showLocation(location);
+            }
         }
     }
     LocationListener locationListener =  new LocationListener() {
@@ -432,8 +429,7 @@ public class MainActivity extends AppCompatActivity implements PermissionUtil.On
         }
     };
     private void showLocation(Location location)
-    {
-        Log.d("TroyInfo","showLocation");
+    {;
         if(locationProvider == LocationManager.NETWORK_PROVIDER)
             setInfo(locationtypeView,"定位：","网络");
         else if(locationProvider == LocationManager.GPS_PROVIDER)
@@ -446,6 +442,13 @@ public class MainActivity extends AppCompatActivity implements PermissionUtil.On
         SpannableStringBuilder infos=new SpannableStringBuilder(String.format("%s%s", name, info));
         infos.setSpan(new ForegroundColorSpan(Color.parseColor("#F8DC10")),0,name.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         view.setText(infos);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data){
+        Intent intent = getIntent();
+        finish();
+        startActivity(intent);
     }
 
 }
