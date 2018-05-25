@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">LTE信息</string>
+    <string name="topbar_tittle">济南电信LTE基站信息</string>
 </resources>

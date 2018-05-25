@@ -4,12 +4,23 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#1F2830"
     tools:context="com.jntele.troy.jntelelte.MainActivity">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
+        <com.jntele.troy.jntelelte.TopBar
+            android:id="@+id/topbar"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="#3F51B5"
+            app:leftBackground="@drawable/left_button_selector"
+            app:rightBackground="@drawable/right_button_selector"
+            app:titleText="@string/topbar_tittle"
+            app:titleTextColor="#FFF"
+            app:titleTextSize="6sp" />
         <include layout="@layout/baselayout"/>
     </LinearLayout>
 

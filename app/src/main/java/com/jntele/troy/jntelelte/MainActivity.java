@@ -34,14 +34,20 @@ import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity{ //implements ActivityCompat.OnRequestPermissionsResultCallback{
+public class MainActivity extends AppCompatActivity { //implements ActivityCompat.OnRequestPermissionsResultCallback{
 
+    private LinearLayout lteLayout;
+    boolean lteLayoutShow = true;
+    private LinearLayout cdmaLayout;
+    boolean cdmaLayoutShow = true;
     // 手机基础信息界面元素
     private TextView changjiaView;
     private TextView xinghaoView;
@@ -53,7 +59,6 @@ public class MainActivity extends AppCompatActivity{ //implements ActivityCompat
     //   private  TextView imei2View;
     private TextView iesi1View;
     //   private  TextView iesi2View;
-
 
     // LTE网络信息界面元素
     private TextView enbView;
@@ -88,11 +93,25 @@ public class MainActivity extends AppCompatActivity{ //implements ActivityCompat
     private DataBaseUtil util;
     private String locationProvider = "";
     private LocationManager locationManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        TopBar topBar = (TopBar) findViewById(R.id.topbar);
+        topBar.setOnLeftAndRightClickListener(new TopBar.OnLeftAndRightClickListener() {
+            @Override
+            public void OnLeftButtonClick() {
+                finish();//左边按钮实现的功能逻辑
+            }
 
+            @Override
+            public void OnRightButtonClick() {
+//右边按钮实现的功能逻辑
+//                Toast.makeText(MainActivity.this, "RightButton", Toast.LENGTH_SHORT).show();
+                reStartActivity();
+            }
+        });
         // 手机权限处理
         initPermission();
         // 基站数据库处理
@@ -121,6 +140,7 @@ public class MainActivity extends AppCompatActivity{ //implements ActivityCompat
                 Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
     }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -142,6 +162,9 @@ public class MainActivity extends AppCompatActivity{ //implements ActivityCompat
 
     // 界面初始化以及显示手机基础信息
     private void initUI() {
+
+        lteLayout = (LinearLayout) findViewById(R.id.lte_layout);
+        cdmaLayout = (LinearLayout) findViewById(R.id.cdma_layout);
         // 初始化手机基础信息界面
         changjiaView = (TextView) findViewById(R.id.changjia);
         xinghaoView = (TextView) findViewById(R.id.xinghao);
@@ -240,15 +263,16 @@ public class MainActivity extends AppCompatActivity{ //implements ActivityCompat
     }
 
     /***********************************************************************/
-    private void initSignal(){
+    private void initSignal() {
         // 监听手机网络状态
         conManger = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
         teleManager = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
         TeleListener teleListener = new TeleListener();
-        if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             teleManager.listen(teleListener, PhoneStateListener.LISTEN_SIGNAL_STRENGTHS | PhoneStateListener.LISTEN_CELL_INFO);
         }
     }
+
     // 手机信号变化监听
     private class TeleListener extends PhoneStateListener {
 
@@ -259,6 +283,8 @@ public class MainActivity extends AppCompatActivity{ //implements ActivityCompat
             CellInfoLte cellInfoLte;
             CellInfoCdma cellInfoCdma;
             int tmp = 0;
+            lteLayoutShow = false;
+            cdmaLayoutShow = false;
             if (allCellInfo != null) {
 
                 for (CellInfo cellInfo : allCellInfo) {
@@ -267,36 +293,49 @@ public class MainActivity extends AppCompatActivity{ //implements ActivityCompat
 //                        Log.d("TroyInfo",cellInfoLte.toString());
                         if (cellInfoLte.isRegistered()) {
                             CellIdentityLte cellIdentity = cellInfoLte.getCellIdentity();
-                            setInfo(tacView,"TAC ",""+cellIdentity.getTac());
-                            setInfo(pciView,"PCI ",""+cellIdentity.getPci());
+                            lteLayoutShow = true;
                             int ci = cellIdentity.getCi();
-                            setInfo(ciView,"CI ","" + ci);
-                            showStationInfo("" + ci);
-                            int enb = ci/256;
+                            int enb = ci / 256;
                             setInfo(enbView,"eNB ",""+enb);
-                            setInfo(cellIdView,"CellID ",""+(ci-enb*256));
-                            break;
+                            setInfo(ciView, "CI ", "" + ci);
+                            setInfo(tacView, "TAC ", "" + cellIdentity.getTac());
+                            setInfo(pciView, "PCI ", "" + cellIdentity.getPci());
+                            setInfo(cellIdView, "CellID ", "" + (ci - enb * 256));
+                            showStationInfo("" + ci);
                         }
-                    }
-                }
-                for (CellInfo cellInfo : allCellInfo){
-                    if(cellInfo instanceof CellInfoCdma){
-                        cellInfoCdma = (CellInfoCdma)cellInfo;
-                        if(cellInfoCdma.isRegistered()) {
-                            CellIdentityCdma cellIdentity = cellInfoCdma.getCellIdentity();
-
-                            setInfo(nidView,"NID ",""+cellIdentity.getNetworkId());
-                            setInfo(sidView,"SID ",""+cellIdentity.getSystemId());
-                            int cid = cellIdentity.getBasestationId();
-                            int x = cid/(16*16);
-                            int y = x/16;
-                            int z = cid-x*16*16+y*16*16;
-                            setInfo(cidView,"BID ",""+z);
-                            break;
-                        }
+                        break;
                     }
                 }
             }
+
+
+            for (CellInfo cellInfo : allCellInfo) {
+                if (cellInfo instanceof CellInfoCdma) {
+                    cellInfoCdma = (CellInfoCdma) cellInfo;
+                    if (cellInfoCdma.isRegistered()) {
+                        CellIdentityCdma cellIdentity = cellInfoCdma.getCellIdentity();
+                        cdmaLayoutShow = true;
+                        setInfo(nidView, "NID ", "" + cellIdentity.getNetworkId());
+                        setInfo(sidView, "SID ", "" + cellIdentity.getSystemId());
+                        int cid = cellIdentity.getBasestationId();
+                        int x = cid / (16 * 16);
+                        int y = x / 16;
+                        int z = cid - x * 16 * 16 + y * 16 * 16;
+                        setInfo(cidView, "BID ", "" + z);
+                        break;
+                    }
+                }
+            }
+
+            if(lteLayoutShow)
+                lteLayout.setVisibility(View.VISIBLE);
+            else
+                lteLayout.setVisibility(View.GONE);
+
+            if(cdmaLayoutShow)
+                cdmaLayout.setVisibility(View.VISIBLE);
+            else
+                cdmaLayout.setVisibility(View.GONE);
         }
         // 信号信息变化时
         public void onSignalStrengthsChanged(SignalStrength signalStrength) {
@@ -337,7 +376,7 @@ public class MainActivity extends AppCompatActivity{ //implements ActivityCompat
                 if ((tmp <= -120) || (tmp >= -1))
                     tmpInfo = "";
                 else
-                    tmpInfo = "" + 0.1*tmp;
+                    tmpInfo = "" + 0.1 * tmp;
                 setInfo(cdmaEcioView, "1XEcio", tmpInfo);
                 tmp = (int) signalStrength.getClass().getMethod("getEvdoDbm").invoke(signalStrength);
                 if ((tmp <= -120) || (tmp >= -1))
@@ -350,7 +389,7 @@ public class MainActivity extends AppCompatActivity{ //implements ActivityCompat
                 if ((tmp <= -120) || (tmp >= -1))
                     tmpInfo = "";
                 else
-                    tmpInfo = "" + 0.1*tmp;
+                    tmpInfo = "" + 0.1 * tmp;
                 setInfo(evdoEcioView, "DoEcio", tmpInfo);
                 tmp = (int) signalStrength.getClass().getMethod("getEvdoSnr").invoke(signalStrength);
                 if ((tmp == -1) || (tmp == 255))
@@ -366,13 +405,17 @@ public class MainActivity extends AppCompatActivity{ //implements ActivityCompat
         }
     }
 
+
+
+
+
     // 更新/获取基站信息
     private void showStationInfo(String ci)
     {
         CellData cd = util.getCellInfo(ci);
         setInfo(bbuNameView,"BBU：",cd.getBBUName());
         setInfo(rruNameView,"RRU：",cd.getCellName());
-        setInfo(stationNameView,"设计名：",cd.getStationName());
+        setInfo(stationNameView,"站点名：",cd.getStationName());
         setInfo(xitongView,"系统：",cd.getSystemType());
         setInfo(producerView,"厂家：",cd.getProducer());
         setInfo(rruTypeView,"RRU型号：",cd.getRRUType());
@@ -450,5 +493,9 @@ public class MainActivity extends AppCompatActivity{ //implements ActivityCompat
         finish();
         startActivity(intent);
     }
-
+    private void reStartActivity() {
+        Intent intent = getIntent();
+        finish();
+        startActivity(intent);
+    }
 }

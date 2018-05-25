@@ -90,12 +90,18 @@ public class DataBaseUtil {
 //            cd.setCounty(cursor.getString(cursor.getColumnIndex("county")));
 //            cd.setSource(cursor.getString(cursor.getColumnIndex("source")));
         }
+//        closeDatabase();
         return cd;
     }
 
     private void openDatabase() {
         if (db == null) {
             db = SQLiteDatabase.openOrCreateDatabase(DATABASE_PATH + "/" + DB_NAME, null);;
+        }
+    }
+    private void closeDatabase() {
+        if (db != null) {
+            db.close();
         }
     }
 }
