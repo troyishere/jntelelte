@@ -2,89 +2,57 @@ package com.jntele.troy.jntelelte;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.telephony.CellIdentityCdma;
 import android.telephony.CellIdentityLte;
 import android.telephony.CellInfo;
 import android.telephony.CellInfoCdma;
 import android.telephony.CellInfoLte;
 import android.telephony.PhoneStateListener;
+import android.telephony.ServiceState;
 import android.telephony.SignalStrength;
 import android.telephony.TelephonyManager;
-import android.text.Spannable;
-import android.text.SpannableStringBuilder;
-import android.text.style.ForegroundColorSpan;
+
+
 import android.util.Log;
-import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.TextView;
+//import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.List;
+import java.util.Objects;
 
-public class MainActivity extends AppCompatActivity { //implements ActivityCompat.OnRequestPermissionsResultCallback{
+public class MainActivity extends AppCompatActivity {
 
-    private LinearLayout lteLayout;
-    boolean lteLayoutShow = true;
-    private LinearLayout cdmaLayout;
-    boolean cdmaLayoutShow = true;
-    // 手机基础信息界面元素
-    private TextView changjiaView;
-    private TextView xinghaoView;
-    private TextView systemView;
-    private TextView networkView;
-    private TextView locationtypeView;
-    private TextView locationView;
-    private TextView imei1View;
-    //   private  TextView imei2View;
-    private TextView iesi1View;
-    //   private  TextView iesi2View;
+    // 界面模块及可见性
+    private Toolbar toolbar;
+    private FloatingActionButton fab;
+    private InfoView infoView;
+    private InfoDialogFragment infoDialogFragment;
+//    private TextView textView;
 
-    // LTE网络信息界面元素
-    private TextView enbView;
-    private TextView cellIdView;
-    private TextView pciView;
-    private TextView tacView;
-    private TextView ciView;
-    private TextView rsrpView;
-    private TextView rsrqView;
-    private TextView sinrView;
-    // LTE基站信息界面元素
-    private TextView bbuNameView;
-    private TextView rruNameView;
-    private TextView stationNameView;
-    private TextView xitongView;
-    private TextView producerView;
-    private TextView rruTypeView;
-    // CDMA网络信息界面元素
-    private TextView nidView;
-    private TextView cidView;
-    private TextView sidView;
-    private TextView cdmaEcioView;
-    private TextView cdmaDbmView;
-    private TextView evdoEcioView;
-    private TextView evdoDbmView;
-    private TextView evdoSnrView;
 
     private NetWorkChangeReceiver networkChangeReceiver;
     private IntentFilter intentFilter;
@@ -98,26 +66,26 @@ public class MainActivity extends AppCompatActivity { //implements ActivityCompa
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        TopBar topBar = (TopBar) findViewById(R.id.topbar);
-        topBar.setOnLeftAndRightClickListener(new TopBar.OnLeftAndRightClickListener() {
+//        supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
+        infoDialogFragment = new InfoDialogFragment();
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void OnLeftButtonClick() {
-                finish();//左边按钮实现的功能逻辑
-            }
-
-            @Override
-            public void OnRightButtonClick() {
-//右边按钮实现的功能逻辑
-//                Toast.makeText(MainActivity.this, "RightButton", Toast.LENGTH_SHORT).show();
+            public void onClick(View view) {
                 reStartActivity();
             }
         });
+        infoView = (InfoView) findViewById(R.id.infoview);
+
+//        textView = (TextView)findViewById(R.id.test);
+//        textView.setVisibility(View.GONE);
+//        infoView.setVisibility(View.GONE);
         // 手机权限处理
         initPermission();
         // 基站数据库处理
         initDataBase();
-        // 手机界面相关
-        initUI();
         // 手机信号状态
         initSignal();
         // 手机网络状态
@@ -126,6 +94,13 @@ public class MainActivity extends AppCompatActivity { //implements ActivityCompa
         // 手机位置处理
         initLocation();
     }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
 
     /***********************************************************************/
     private final int REQUEST_CODE = 101;
@@ -160,55 +135,6 @@ public class MainActivity extends AppCompatActivity { //implements ActivityCompa
         }
     }
 
-    // 界面初始化以及显示手机基础信息
-    private void initUI() {
-
-        lteLayout = (LinearLayout) findViewById(R.id.lte_layout);
-        cdmaLayout = (LinearLayout) findViewById(R.id.cdma_layout);
-        // 初始化手机基础信息界面
-        changjiaView = (TextView) findViewById(R.id.changjia);
-        xinghaoView = (TextView) findViewById(R.id.xinghao);
-        systemView = (TextView) findViewById(R.id.system);
-        networkView = (TextView) findViewById(R.id.network);
-        locationtypeView = (TextView) findViewById(R.id.locationtype);
-        locationView = (TextView) findViewById(R.id.location);
-        imei1View = (TextView) findViewById(R.id.imei1);
-//        imei2View = (TextView)findViewById(R.id.imei2);
-        iesi1View = (TextView) findViewById(R.id.iesi1);
-//        iesi2View = (TextView)findViewById(R.id.iesi2);
-        setInfo(changjiaView, "厂家：", android.os.Build.BRAND);
-        setInfo(xinghaoView, "型号：", android.os.Build.MODEL);
-        setInfo(systemView, "系统：", String.format("Android %s", android.os.Build.VERSION.RELEASE));
-        // 初始化网络信息界面
-        enbView = (TextView) findViewById(R.id.enodeb);
-        cellIdView = (TextView) findViewById(R.id.cellid);
-        ciView = (TextView) findViewById(R.id.ci);
-        tacView = (TextView) findViewById(R.id.tac);
-        pciView = (TextView) findViewById(R.id.pci);
-        rsrpView = (TextView) findViewById(R.id.rsrp);
-        rsrqView = (TextView) findViewById(R.id.rsrq);
-        sinrView = (TextView) findViewById(R.id.sinr);
-
-        nidView = (TextView) findViewById(R.id.nid);
-        sidView = (TextView) findViewById(R.id.sid);
-        cidView = (TextView) findViewById(R.id.cid);
-
-        cdmaDbmView = (TextView) findViewById(R.id.cdmadbm);
-        cdmaEcioView = (TextView) findViewById(R.id.cdmaecio);
-
-        evdoDbmView = (TextView) findViewById(R.id.evdodbm);
-        evdoEcioView = (TextView) findViewById(R.id.evdoecio);
-        evdoSnrView = (TextView) findViewById(R.id.evdosnr);
-
-        // 初始化基站信息界面
-        bbuNameView = (TextView) findViewById(R.id.bbuname);
-        rruNameView = (TextView) findViewById(R.id.cellname);
-        stationNameView = (TextView) findViewById(R.id.stationname);
-        xitongView = (TextView) findViewById(R.id.xitong);
-        producerView = (TextView) findViewById(R.id.producer);
-        rruTypeView = (TextView) findViewById(R.id.rrutype);
-    }
-
     /***********************************************************************/
     // 网络状态初始化
     private void initNetwork() {
@@ -229,13 +155,26 @@ public class MainActivity extends AppCompatActivity { //implements ActivityCompa
 
     // 网络状态信息
     private void showPhoneInfo() {
-        setInfo(networkView, "网络：", String.format("%s(%s)", getNetWorkType(), teleManager.getNetworkOperatorName()));
+        infoView.setNetwork(getNetWorkType(), teleManager.getSimOperatorName());
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
 //            Log.d("TroyInfo", "Need READ_PHONE_STATE Permission");
             return;
         }
-        setInfo(imei1View, "IMEI：", teleManager.getDeviceId());
-        setInfo(iesi1View, "IMSI：", teleManager.getSubscriberId());
+        boolean ret = false;
+        for (Method m : teleManager.getClass().getDeclaredMethods()) {
+
+            if (m.getName().equals("getPhoneCount")) {
+                ret = true;
+                break;
+            }
+        }
+        if(ret&&(teleManager.getPhoneCount() == 2)){
+            infoView.setPhoneID(teleManager.getDeviceId(0),teleManager.getSubscriberId(),1);
+            String imei2 = teleManager.getDeviceId(1);
+            infoView.setPhoneID((imei2!=null? imei2:""),"",2);
+        }else{
+            infoView.setPhoneID(teleManager.getDeviceId(),teleManager.getSubscriberId(),0);
+        }
     }
 
     // 手机上网状态
@@ -269,162 +208,137 @@ public class MainActivity extends AppCompatActivity { //implements ActivityCompa
         teleManager = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
         TeleListener teleListener = new TeleListener();
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            teleManager.listen(teleListener, PhoneStateListener.LISTEN_SIGNAL_STRENGTHS | PhoneStateListener.LISTEN_CELL_INFO);
+            teleManager.listen(teleListener, PhoneStateListener.LISTEN_SIGNAL_STRENGTHS | PhoneStateListener.LISTEN_CELL_INFO);// | PhoneStateListener.LISTEN_SERVICE_STATE);
         }
     }
 
     // 手机信号变化监听
     private class TeleListener extends PhoneStateListener {
-
         // 小区信息变化时
+        @Override
         public void onCellInfoChanged(List<CellInfo> cellList) {
             super.onCellInfoChanged(cellList);
             @SuppressLint("MissingPermission") List<CellInfo> allCellInfo = teleManager.getAllCellInfo();
             CellInfoLte cellInfoLte;
             CellInfoCdma cellInfoCdma;
+
+            infoView.unshowLteNetView();
+            infoView.unshowLteStationView();
+            infoView.unshowCdmaNetView();
+
             int tmp = 0;
-            lteLayoutShow = false;
-            cdmaLayoutShow = false;
             if (allCellInfo != null) {
 
                 for (CellInfo cellInfo : allCellInfo) {
                     if (cellInfo instanceof CellInfoLte) {
                         cellInfoLte = (CellInfoLte) cellInfo;
-//                        Log.d("TroyInfo",cellInfoLte.toString());
                         if (cellInfoLte.isRegistered()) {
+                            infoView.showLteNetView();
                             CellIdentityLte cellIdentity = cellInfoLte.getCellIdentity();
-                            lteLayoutShow = true;
+                            String test="CellIdentityLte:";
+//                            Method[] methods= cellIdentity.getClass().getDeclaredMethods();
+//                            for(Method method:methods){
+//                                if(method.getName().contains("get"))
+//                                    test = String.format("%s\n%s",test , method.getName());
+//                            }
+//                            textView.setText(test);
                             int ci = cellIdentity.getCi();
-                            int enb = ci / 256;
-                            setInfo(enbView,"eNB ",""+enb);
-                            setInfo(ciView, "CI ", "" + ci);
-                            setInfo(tacView, "TAC ", "" + cellIdentity.getTac());
-                            setInfo(pciView, "PCI ", "" + cellIdentity.getPci());
-                            setInfo(cellIdView, "CellID ", "" + (ci - enb * 256));
-                            showStationInfo("" + ci);
+                            infoView.setLteNetInfo(cellIdentity);
+                            CellData cellData = util.getCellInfo(""+ci);
+
+                            String operator = teleManager.getSimOperatorName();
+//                            textView.setText(operator);
+                            if(operator.contains("中国电信"))
+                                infoView.setLteStationInfo(cellData);
                         }
                         break;
                     }
                 }
             }
 
-
             for (CellInfo cellInfo : allCellInfo) {
                 if (cellInfo instanceof CellInfoCdma) {
                     cellInfoCdma = (CellInfoCdma) cellInfo;
                     if (cellInfoCdma.isRegistered()) {
+                        infoView.showCdmaNetView();
                         CellIdentityCdma cellIdentity = cellInfoCdma.getCellIdentity();
-                        cdmaLayoutShow = true;
-                        setInfo(nidView, "NID ", "" + cellIdentity.getNetworkId());
-                        setInfo(sidView, "SID ", "" + cellIdentity.getSystemId());
-                        int cid = cellIdentity.getBasestationId();
-                        int x = cid / (16 * 16);
-                        int y = x / 16;
-                        int z = cid - x * 16 * 16 + y * 16 * 16;
-                        setInfo(cidView, "BID ", "" + z);
+                        infoView.setCdmaNetInfo(cellIdentity);
                         break;
                     }
                 }
+
             }
-
-            if(lteLayoutShow)
-                lteLayout.setVisibility(View.VISIBLE);
-            else
-                lteLayout.setVisibility(View.GONE);
-
-            if(cdmaLayoutShow)
-                cdmaLayout.setVisibility(View.VISIBLE);
-            else
-                cdmaLayout.setVisibility(View.GONE);
         }
         // 信号信息变化时
+        @Override
         public void onSignalStrengthsChanged(SignalStrength signalStrength) {
             super.onSignalStrengthsChanged(signalStrength);
             int tmp = 0;
             String tmpInfo = "";
             try {
                 // LTE网管状态
-                tmp = (int) signalStrength.getClass().getMethod("getLteRsrp").invoke(signalStrength);
-                if ((tmp <= -120) || (tmp >= -1))
-                    tmpInfo = "";
-                else
-                    tmpInfo = "" + tmp;
-                setInfo(rsrpView, "RSRP ", tmpInfo);
-                tmp = (int) signalStrength.getClass().getMethod("getLteRsrq").invoke(signalStrength);
-                if ((tmp <= -120) || (tmp >= -1))
-                    tmpInfo = "";
-                else
-                    tmpInfo = "" + tmp;
-                setInfo(rsrqView, "RSRQ ", tmpInfo);
-                tmp = (int) signalStrength.getClass().getMethod("getLteSignalStrength").invoke(signalStrength);
-                if (tmp == 99)
-                    tmpInfo = "";
-                else
-                    tmpInfo = "" + tmp;
-                setInfo(sinrView, "SS ", tmpInfo);
-//                Log.d("TroyTest", "CQI：" + signalStrength.getClass().getMethod("getLteCqi").invoke(signalStrength));
-//                Log.d("TroyTest", "Rssnr：" + signalStrength.getClass().getMethod("getLteRssnr").invoke(signalStrength));
+                infoView.setLteSignalInfo(signalStrength);
 
                 // CDMA网管状态
-                tmp = (int) signalStrength.getClass().getMethod("getCdmaDbm").invoke(signalStrength);
-                if ((tmp <= -120) || (tmp >= -1))
-                    tmpInfo = "";
-                else
-                    tmpInfo = "" + tmp;
-                setInfo(cdmaDbmView, "1XRx", tmpInfo);
-                tmp = (int) signalStrength.getClass().getMethod("getCdmaEcio").invoke(signalStrength);
-                if ((tmp <= -120) || (tmp >= -1))
-                    tmpInfo = "";
-                else
-                    tmpInfo = "" + 0.1 * tmp;
-                setInfo(cdmaEcioView, "1XEcio", tmpInfo);
-                tmp = (int) signalStrength.getClass().getMethod("getEvdoDbm").invoke(signalStrength);
-                if ((tmp <= -120) || (tmp >= -1))
-                    tmpInfo = "";
-                else
-                    tmpInfo = "" + tmp;
-                setInfo(evdoDbmView, "DoRx", tmpInfo);
-
-                tmp = (int) signalStrength.getClass().getMethod("getEvdoEcio").invoke(signalStrength);
-                if ((tmp <= -120) || (tmp >= -1))
-                    tmpInfo = "";
-                else
-                    tmpInfo = "" + 0.1 * tmp;
-                setInfo(evdoEcioView, "DoEcio", tmpInfo);
-                tmp = (int) signalStrength.getClass().getMethod("getEvdoSnr").invoke(signalStrength);
-                if ((tmp == -1) || (tmp == 255))
-                    tmpInfo = "";
-                else
-                    tmpInfo = "" + tmp;
-                setInfo(evdoSnrView, "SNR ", tmpInfo);
-
+                infoView.setCdmaSignalInfo(signalStrength);
             } catch (Exception e) {
                 e.printStackTrace();
-                return;
             }
         }
+        
+
+//        @Override
+//        public void onServiceStateChanged(ServiceState serviceState) {
+//            super.onServiceStateChanged(serviceState);
+////            String tmp = serviceState.getOperatorAlphaShort();
+////            String tmp = "" + (int) serviceState.getClass().getMethod("getNetworkType").invoke(serviceState);
+//            String tmp;
+////            Log.d("TroyInfoServiceState",tmp);
+//            try {
+//                tmp = "" + (int) serviceState.getClass().getMethod("getNetworkType").invoke(serviceState);
+//                Log.d("TroyInfoServiceState",tmp);
+//            } catch (IllegalAccessException e) {
+//                e.printStackTrace();
+//            } catch (InvocationTargetException e) {
+//                e.printStackTrace();
+//            } catch (NoSuchMethodException e) {
+//                e.printStackTrace();
+//            }
+//
+//        }
     }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_exit) {
+            finish();
+            return true;
+        }else if(id == R.id.action_info){
 
+            infoDialogFragment.show("说明", getString(R.string.app_info), "确定", new DialogInterface.OnClickListener() {
 
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                }
+            }, getFragmentManager());
+            return true;
+        }else if(id == R.id.action_settings){
+            infoDialogFragment.show("更新", getString(R.string.app_un), "确定", new DialogInterface.OnClickListener() {
 
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                }
+            }, getFragmentManager());
+            return true;
+        }
 
-
-    // 更新/获取基站信息
-    private void showStationInfo(String ci)
-    {
-        CellData cd = util.getCellInfo(ci);
-        setInfo(bbuNameView,"BBU：",cd.getBBUName());
-        setInfo(rruNameView,"RRU：",cd.getCellName());
-        setInfo(stationNameView,"站点名：",cd.getStationName());
-        setInfo(xitongView,"系统：",cd.getSystemType());
-        setInfo(producerView,"厂家：",cd.getProducer());
-        setInfo(rruTypeView,"RRU型号：",cd.getRRUType());
+        return super.onOptionsItemSelected(item);
     }
 
     /***********************************************************************/
     @SuppressLint("MissingPermission")
     private void initLocation() {
-//        Log.d("TroyInfo", "initLocation");
+
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         List<String> list = locationManager.getProviders(true);
         if (list.contains(LocationManager.GPS_PROVIDER)) {
@@ -435,15 +349,15 @@ public class MainActivity extends AppCompatActivity { //implements ActivityCompa
             //是否为网络位置控制器
             locationProvider = LocationManager.NETWORK_PROVIDER;
         }
-
-        if(locationProvider==""){
+        if(Objects.equals(locationProvider, "")){
             Log.d("TroyInfo","Provider Null");
             Toast.makeText(getApplicationContext(), "请至少打开网络定位！",   Toast.LENGTH_SHORT).show();
         }else {
+            infoView.setLocationType(locationProvider);
             locationManager.requestLocationUpdates(locationProvider, 3000, 1, locationListener);
             Location location = locationManager.getLastKnownLocation(locationProvider);
             if (location != null) {
-                showLocation(location);
+                infoView.setLocation(location);
             }
         }
     }
@@ -467,32 +381,10 @@ public class MainActivity extends AppCompatActivity { //implements ActivityCompa
         @Override
         public void onLocationChanged(Location location) {
             //如果位置发生变化,重新显示
-            showLocation(location);
-
+            infoView.setLocation(location);
         }
     };
-    private void showLocation(Location location)
-    {;
-        if(locationProvider == LocationManager.NETWORK_PROVIDER)
-            setInfo(locationtypeView,"定位：","网络");
-        else if(locationProvider == LocationManager.GPS_PROVIDER)
-            setInfo(locationtypeView,"定位：","GPS");
-        setInfo(locationView,"",String.format("(%.5f,%.5f)",location.getLongitude(),location.getLatitude()));
-    }
 
-    /***********************************************************************/
-    private void setInfo(TextView view,String name,String info){
-        SpannableStringBuilder infos=new SpannableStringBuilder(String.format("%s%s", name, info));
-        infos.setSpan(new ForegroundColorSpan(Color.parseColor("#F8DC10")),0,name.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        view.setText(infos);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data){
-        Intent intent = getIntent();
-        finish();
-        startActivity(intent);
-    }
     private void reStartActivity() {
         Intent intent = getIntent();
         finish();

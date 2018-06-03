@@ -1,6 +1,5 @@
 package com.jntele.troy.jntelelte;
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;

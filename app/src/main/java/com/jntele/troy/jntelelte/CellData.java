@@ -1,9 +1,8 @@
 package com.jntele.troy.jntelelte;
 
 /**
- * Created by lenovo on 2018/5/19.
+ * LTE信息BEAN
  */
-
 public class CellData {
     private String cell_id="";
     private String cell_name="";
@@ -36,7 +35,5 @@ public class CellData {
     public void setStationName(String info){station_name=info;}
     public void setCounty(String info){county=info;}
     public void setSource(String info){source=info;}
-
-
 
 }

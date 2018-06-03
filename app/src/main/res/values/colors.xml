@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <!--<color name="colorPrimary">#3F51B5</color>-->
+    <!--<color name="colorPrimaryDark">#303F9F</color>-->
+    <!--<color name="colorAccent">#FF4081</color>-->
+    <color name="BACK1">#1F2830</color>
+    <color name="BACK2">#101010</color>
+    <color name="fontColor">#FFF</color>
+    <color name="partTittleColor0">#E07A28</color>
+    <color name="partTittleColor1">#448B00</color>
+    <color name="partTittleColor2">#9470DA</color>
+    <color name="partTittleColor3">#80388A</color>
+    <color name="tittleBack">#3F51B5</color>
 </resources>

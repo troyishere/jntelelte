@@ -1,27 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#1F2830"
+    android:background="@color/BACK2"
     tools:context="com.jntele.troy.jntelelte.MainActivity">
-
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <!--android:background="@color/BACK2"-->
+    <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-        <com.jntele.troy.jntelelte.TopBar
-            android:id="@+id/topbar"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:background="#3F51B5"
-            app:leftBackground="@drawable/left_button_selector"
-            app:rightBackground="@drawable/right_button_selector"
-            app:titleText="@string/topbar_tittle"
-            app:titleTextColor="#FFF"
-            app:titleTextSize="6sp" />
-        <include layout="@layout/baselayout"/>
-    </LinearLayout>
+            android:background="@color/tittleBack"
+            android:layout_gravity="top"
+            android:theme="@style/AppTheme.AppBarOverlay"
+            app:popupTheme="@style/AppTheme.PopupOverlay">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textSize="20sp"
+                android:textColor="@color/fontColor"
+                android:text="@string/toolbar_tittle"/>
+        </android.support.v7.widget.Toolbar>
 
-</android.support.constraint.ConstraintLayout>
+    </android.support.design.widget.AppBarLayout>
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        <com.jntele.troy.jntelelte.InfoView
+            android:id="@+id/infoview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    </android.support.v4.widget.NestedScrollView>
+
+    <!--<TextView-->
+        <!--android:id="@+id/test"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:textColor="@color/fontColor"-->
+        <!--android:text="test"/>-->
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:layout_gravity="bottom|end"
+        app:srcCompat="@drawable/ic_fab" />
+</android.support.design.widget.CoordinatorLayout>

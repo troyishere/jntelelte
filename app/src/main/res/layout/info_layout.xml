@@ -1,0 +1,360 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <!--手机基础信息模块界面-->
+    <TextView
+        android:id="@+id/phonetitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/partTittleColor0"
+        android:text="手机基础信息"
+        android:textColor="@color/fontColor"
+        android:gravity="center_horizontal"/>
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:stretchColumns="*">
+        <TableRow
+            android:background="@color/BACK1">
+            <TextView
+                android:id="@+id/changjia"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/fontColor"
+                android:text="厂家：" />
+            <TextView
+                android:id="@+id/system"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/fontColor"
+                android:text="系统：" />
+        </TableRow>
+        <TableRow
+            android:background="@color/BACK2">
+            <TextView
+                android:id="@+id/xinghao"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/fontColor"
+                android:text="型号：" />
+            <TextView
+                android:id="@+id/network"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/fontColor"
+                android:text="数据：" />
+        </TableRow>
+        <TableRow
+            android:background="@color/BACK1">
+            <TextView
+                android:id="@+id/locationtype"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/fontColor"
+                android:text="定位：" />
+
+            <TextView
+                android:id="@+id/location"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/fontColor"
+                android:text="()" />
+            </TableRow>
+        <TableRow
+            android:background="@color/BACK2">
+
+            <TextView
+                android:id="@+id/imei1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/fontColor"
+                android:text="IMEI1：" />
+            <TextView
+                android:id="@+id/iesi1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/fontColor"
+                android:text="IESI1：" />
+        </TableRow>
+        <TableRow
+            android:background="@color/BACK1"
+            >
+            <TextView
+                android:id="@+id/imei2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/fontColor"
+                android:text="IMEI2：" />
+            <TextView
+                android:id="@+id/iesi2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/fontColor"
+                android:text="IESI2：" />
+        </TableRow>
+    </TableLayout>
+
+
+
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:id="@+id/ltenetinfo">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/partTittleColor1"
+            android:text="LTE网络信息"
+            android:textColor="@color/fontColor"
+            android:gravity="center_horizontal"/>
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:stretchColumns="*">
+            <TableRow
+                android:background="@color/BACK1">
+                <TextView
+                    android:id="@+id/enodeb"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/fontColor"
+                    android:text="eNB" />
+                <TextView
+                    android:id="@+id/cellid"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/fontColor"
+                    android:text="CellId" />
+                <TextView
+                    android:id="@+id/pci"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/fontColor"
+                    android:text="PCI" />
+                <TextView
+                    android:id="@+id/tac"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/fontColor"
+                    android:text="TAC" />
+            </TableRow>
+            <TableRow
+                android:background="@color/BACK2">
+                <TextView
+                    android:id="@+id/ci"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/fontColor"
+                    android:text="CI" />
+
+                <TextView
+                    android:id="@+id/pindian"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/fontColor"
+                    android:text= "频点" />
+                <TextView
+                    android:id="@+id/freq"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/fontColor"
+                    android:layout_span="3"
+                    android:text="频段" />
+            </TableRow>
+            <TableRow
+                android:background="@color/BACK1">
+                <TextView
+                    android:id="@+id/rsrp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/fontColor"
+                    android:text="RSRP" />
+
+                <TextView
+                    android:id="@+id/rsrq"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/fontColor"
+                    android:text="RSRQ" />
+
+                <TextView
+                    android:id="@+id/sinr"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/fontColor"
+                    android:layout_span="3"
+                    android:text="SS" />
+            </TableRow>
+        </TableLayout>
+
+    </LinearLayout>
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:id="@+id/ltestationinfo"
+        >
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/partTittleColor2"
+            android:text="LTE基站信息"
+            android:textColor="@color/fontColor"
+            android:gravity="center_horizontal"/>
+        <TextView
+            android:id="@+id/bbuname"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/BACK1"
+            android:text="BBU名："
+            android:textColor="@color/fontColor"/>
+        <TextView
+            android:id="@+id/cellname"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/BACK2"
+            android:text="小区名："
+            android:textColor="@color/fontColor"/>
+        <GridLayout
+            android:id="@+id/cellinfogrid"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:columnCount="2">
+            <TextView
+                android:id="@+id/stationname"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_columnWeight = "1"
+                android:background="@color/BACK1"
+                android:textColor="@color/fontColor"
+                android:text="站点名：" />
+            <TextView
+                android:id="@+id/xitong"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_columnWeight = "1"
+                android:background="@color/BACK1"
+                android:textColor="@color/fontColor"
+                android:text="系统：" />
+            <TextView
+                android:id="@+id/rrutype"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_columnWeight = "1"
+                android:background="@color/BACK2"
+                android:textColor="@color/fontColor"
+                android:text="RRU型号：" />
+            <TextView
+                android:id="@+id/producer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_columnWeight = "1"
+                android:background="@color/BACK2"
+                android:textColor="@color/fontColor"
+                android:text="厂家：" />
+        </GridLayout>
+    </LinearLayout>
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:id="@+id/cdmanetinfo">
+        <TextView
+            android:id="@+id/cdmatitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/partTittleColor3"
+            android:text="CDMA网络信息"
+            android:textColor="@color/fontColor"
+            android:gravity="center_horizontal"/>
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:stretchColumns="*">
+            <TableRow>
+                <TextView
+                    android:id="@+id/sid"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@color/BACK1"
+                    android:textColor="@color/fontColor"
+                    android:text="SID" />
+                <TextView
+                    android:id="@+id/nid"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@color/BACK1"
+                    android:textColor="@color/fontColor"
+                    android:text="NID" />
+                <TextView
+                    android:id="@+id/cid"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@color/BACK1"
+                    android:textColor="@color/fontColor"
+                    android:text="CID" />
+                <TextView
+                    android:id="@+id/bid"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@color/BACK1"
+                    android:textColor="@color/fontColor"
+                    android:text="BID" />
+            </TableRow>
+            <TableRow
+                android:background="@color/BACK2">
+                <TextView
+                    android:id="@+id/cdma_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_span="3"
+                    android:textColor="@color/fontColor"
+                    android:text="站点名" />
+
+                <TextView
+                    android:id="@+id/evdosnr"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/fontColor"
+                    android:text="Snr" />
+            </TableRow>
+            <TableRow
+                android:background="@color/BACK1">
+                <TextView
+                    android:id="@+id/cdmadbm"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/fontColor"
+                    android:text="2GRx" />
+
+                <TextView
+                    android:id="@+id/cdmaecio"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_columnWeight = "1"
+                    android:textColor="@color/fontColor"
+                    android:text= "2GEcio" />
+
+                <TextView
+                    android:id="@+id/evdodbm"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/fontColor"
+                    android:text="3GRx" />
+                <TextView
+                    android:id="@+id/evdoecio"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/fontColor"
+                    android:text="3GEcio" />
+            </TableRow>
+        </TableLayout>
+
+    </LinearLayout>
+
+</LinearLayout>
